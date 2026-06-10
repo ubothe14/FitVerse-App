@@ -8,38 +8,37 @@ function Page() {
   return (
     <InfoShell
       title="About FitVerse"
-      subtitle="A free and open source workout analytics tool (AGPL-3.0). Connect Hevy, Strong, or Lyfta and get answers your logging app doesn't give you &mdash; muscle heatmaps, plateau detection, set-by-set feedback, and AI-ready exports. Everything runs in your browser."
+      subtitle="FitVerse turns your Hevy, Strong, Lyfta, Motra, or CSV workout history into actionable training intelligence — muscle heatmaps, plateau detection, PR tracking, set-by-set coaching feedback, and AI-ready exports. Analytics stay browser-first and private, with secure session handling for real users."
       activeNav={null}
     >
       <div className="space-y-10">
         <section>
-          <h2 className="text-lg font-semibold text-white mb-3">Open source</h2>
+          <h2 className="text-lg font-semibold text-white mb-3">Transparent and auditable</h2>
           <p className="text-slate-300 leading-relaxed mb-4">
-            FitVerse is fully open source under the <strong>AGPL-3.0</strong> license. You can audit the code, run it locally, or contribute. No hidden telemetry, no paywalls, no server-side data collection.
+            FitVerse is released under the <strong>AGPL-3.0</strong> license. The code is fully visible, auditable, and self-hostable. There are no hidden paywalls, no black-box telemetry, and no surprise data collection.
           </p>
         </section>
 
         <section>
           <h2 className="text-lg font-semibold text-white mb-3">What FitVerse does</h2>
           <ul className="list-disc list-inside space-y-1 text-slate-300 leading-relaxed">
-            <li>Imports workout data from Hevy, Strong, and Lyfta (API sync or CSV).</li>
+            <li>Connects to Hevy, Strong, Lyfta, Motra, or CSV exports and combines them into one training dashboard.</li>
             <li>Builds interactive muscle heatmaps with per-exercise drill-down, volume zone scoring, and muscle balance analysis.</li>
-            <li>Detects plateaus and gives specific, actionable next-session suggestions.</li>
-            <li>Analyzes every set in a workout with plain-English feedback across 19 scenarios.</li>
-            <li>Tracks three kinds of PRs: all-time bests, 2-month bests, and premature PRs.</li>
-            <li>Exports structured training data for AI analysis with built-in analysis modules.</li>
-            <li>Combines data from multiple apps into one unified dashboard.</li>
-            <li>Processes everything locally in your browser &mdash; no server-side storage.</li>
+            <li>Detects plateaus and assigns exercise status labels with specific next-session suggestions.</li>
+            <li>Analyzes every set using 19 coaching signals and gives plain-English improvement guidance.</li>
+            <li>Tracks PR momentum, all-time bests, 2-month bests, and premature PR warnings.</li>
+            <li>Provides an AI Coach workspace and AI-ready exports for prompt-based analysis.</li>
+            <li>Keeps workout analytics browser-first while using secure Google sign-in for session handling.</li>
           </ul>
         </section>
 
         <section>
           <h2 className="text-lg font-semibold text-white mb-3">What makes FitVerse different</h2>
           <p className="text-slate-300 leading-relaxed mb-4">
-            Hevy, Strong, and Lyfta are great workout loggers. FitVerse is a workout analyst. Your app shows you what you did. FitVerse tells you what it means &mdash; and what to do next.
+            Your workout app logs the session. FitVerse interprets it. Instead of raw charts, you get clear indicators like "Getting stronger", "Plateauing", and "Taking a dip", plus concise suggestions you can use immediately.
           </p>
           <p className="text-slate-300 leading-relaxed mb-4">
-            Most analytics tools give you dashboards full of numbers you have to interpret yourself. FitVerse gives you status labels, coaching feedback, and tiny actionable suggestions you can try next session. See the <a href={assetPath('how-it-works/')} className="text-emerald-300/80 hover:text-emerald-400 transition-colors duration-200">How it works</a> guide for a complete walkthrough.
+            FitVerse is built around useful answers, not just numbers. The dashboard, AI Coach, and export tools work together so you can understand your training, fix imbalances, and stay on track without guessing. Read the <a href={assetPath('how-it-works/')} className="text-emerald-300/80 hover:text-emerald-400 transition-colors duration-200">How it works</a> guide for the full workflow.
           </p>
         </section>
 

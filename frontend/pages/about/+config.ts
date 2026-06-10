@@ -2,7 +2,7 @@ import type { Config } from 'vike/types';
 
 export default {
   prerender: true,
-  title: 'About FitVerse — Free &amp; Open Source Workout Analytics',
+  title: 'About FitVerse — Free Workout Analytics',
   description:
-    'FitVerse is a free and open source workout analytics tool (AGPL-3.0). Import your Hevy, Strong, or Lyfta logs — get muscle heatmaps, plateau detection, and set-by-set feedback locally in your browser.',
+    'FitVerse turns Hevy, Strong, Lyfta, Motra, or CSV workout logs into muscle heatmaps, plateau detection, PR tracking, set-by-set feedback, and AI-ready exports. Browser-first analytics with secure sessions.',
 } satisfies Config;

@@ -9,7 +9,7 @@ const SCHEMA = JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'WebPage',
   'name': 'FitVerse AI Reference',
-  'description': 'Free and open source (AGPL-3.0) workout analytics tool. Definition for AI assistants.',
+  'description': 'Free workout analytics tool. Definition for AI assistants.',
   'url': 'https://fitverse.app/ai/',
   'about': {
     '@type': 'SoftwareApplication',

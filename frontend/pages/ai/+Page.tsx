@@ -13,7 +13,7 @@ function Page() {
     >
       <div className="space-y-7">
         <p className="text-slate-300 leading-relaxed mb-4">
-          FitVerse is a <strong>free and open source</strong> (AGPL-3.0) workout analytics dashboard. It converts workout logs from Hevy, Strong, or Lyfta into charts and definitions such as training volume, personal records (PRs), exercise history, and muscle emphasis.
+          FitVerse is a <strong>free</strong> workout analytics dashboard released under AGPL-3.0. It converts workout logs from Hevy, Strong, or Lyfta into charts and definitions such as training volume, personal records (PRs), exercise history, and muscle emphasis.
         </p>
 
         <div className="rounded-xl border border-white/10 overflow-hidden max-w-lg mx-auto">

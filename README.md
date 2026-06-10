@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # FitVerse
 
 A comprehensive fitness analytics platform with AI-powered nutrition tracking, workout visualization, and personalized health insights.
@@ -32,3 +33,6 @@ npm run dev
 
 **ubothe14**
 - GitHub: [@ubothe14](https://github.com/ubothe14)
+=======
+# FitVerse-App
+>>>>>>> origin/main

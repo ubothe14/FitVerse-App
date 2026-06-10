@@ -2,7 +2,7 @@ import React from 'react';
 
 const OG_IMAGE = 'https://fitverse.app/UI/logo.png';
 
-export const SOFTWARE_APP_SCHEMA = '{"@context":"https://schema.org","@graph":[{"@type":"SoftwareApplication","name":"FitVerse","applicationCategory":"HealthApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Free and open source workout analytics dashboard that turns Hevy, Strong, and Lyfta logs into visual training insights. Track volume trends, personal records, muscle heatmaps, and exercise progress locally in your browser.","url":"https://fitverse.app","image":"https://fitverse.app/UI/logo.png"},{"@type":"WebSite","name":"FitVerse","url":"https://fitverse.app","description":"Free and open source workout analytics dashboard. Turn Hevy, Strong, and Lyfta workout logs into beautiful charts and insights.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://fitverse.app/?q={search_term_string}"},"query-input":"required name=search_term_string"}}]}';
+export const SOFTWARE_APP_SCHEMA = '{"@context":"https://schema.org","@graph":[{"@type":"SoftwareApplication","name":"FitVerse","applicationCategory":"HealthApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Free workout analytics dashboard that turns Hevy, Strong, and Lyfta logs into visual training insights. Track volume trends, personal records, muscle heatmaps, and exercise progress locally in your browser.","url":"https://fitverse.app","image":"https://fitverse.app/UI/logo.png"},{"@type":"WebSite","name":"FitVerse","url":"https://fitverse.app","description":"Free workout analytics dashboard. Turn Hevy, Strong, and Lyfta workout logs into beautiful charts and insights.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://fitverse.app/?q={search_term_string}"},"query-input":"required name=search_term_string"}}]}';
 
 export type SeoHeadProps = {
   canonicalPath: string;
@@ -11,9 +11,9 @@ export type SeoHeadProps = {
   description?: string;
 };
 
-const FALLBACK_TITLE = 'FitVerse — Free &amp; Open Source Workout Analytics';
+const FALLBACK_TITLE = 'FitVerse — Free Workout Analytics';
 const FALLBACK_DESCRIPTION =
-  'Free and open source workout analytics. Import your gym logs from Hevy, Strong, or Lyfta — get muscle heatmaps, plateau detection, set-by-set feedback, and AI-ready exports. Runs in your browser, no account needed.';
+  'Free workout analytics. Import your gym logs from Hevy, Strong, or Lyfta — get muscle heatmaps, plateau detection, set-by-set feedback, and AI-ready exports. Runs in your browser, no account needed.';
 
 export function SeoHead({ canonicalPath, isLanding, title, description }: SeoHeadProps) {
   const siteUrl = 'https://fitverse.app';

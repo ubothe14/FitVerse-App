@@ -98,8 +98,8 @@ const servePublicIndexHtmlPlugin = () => {
 
 const SEO_NOSCRIPT = `<noscript>
       <div class="noscript-content" style="background: #0f172a; max-width: 800px; margin: 0 auto; padding: 40px 20px; color: #e2e8f0; font-family: system-ui, sans-serif; line-height: 1.6;">
-        <h1 style="font-size:2rem;margin-bottom:0.75rem;">FitVerse — Free &amp; Open Source Workout Analytics</h1>
-        <p style="margin-bottom:1rem;color:#94a3b8;font-size:1.1rem;">Your workout app logs what you did. FitVerse tells you what it <em>means</em> — and what to do next. Free, open source, and private. No account needed.</p>
+        <h1 style="font-size:2rem;margin-bottom:0.75rem;">FitVerse — Free Workout Analytics</h1>
+        <p style="margin-bottom:1rem;color:#94a3b8;font-size:1.1rem;">Your workout app logs what you did. FitVerse tells you what it <em>means</em> — and what to do next. Free, browser-first, and private. No account needed.</p>
 
         <h2 style="font-size:1.5rem;margin:2rem 0 0.75rem;">Why your logging app isn't enough</h2>
         <p style="margin-bottom:0.75rem;color:#94a3b8;">Hevy, Strong, and Lyfta are excellent workout loggers. They track sets, reps, and weight perfectly. But their built-in analytics stop at basic line charts and raw numbers. They don't tell you if you're plateauing, which muscles you're neglecting, or what to change next session.</p>
@@ -122,7 +122,7 @@ const SEO_NOSCRIPT = `<noscript>
         </ol>
 
         <h2 style="font-size:1.5rem;margin:2rem 0 0.75rem;">Private by design</h2>
-        <p style="margin-bottom:0.75rem;color:#94a3b8;">FitVerse is <strong>fully open source</strong> under the AGPL-3.0 license. <a href="https://github.com/aree6/FitVerse" style="color:#6ee7b7;">Source code on GitHub</a>. Every line is auditable. Your workout data never leaves your device — all analytics run locally in your browser. Nothing is uploaded to FitVerse servers. Read our <a href="/privacy/" style="color:#6ee7b7;">privacy policy</a> for the full breakdown.</p>
+        <p style="margin-bottom:0.75rem;color:#94a3b8;">FitVerse is licensed under the AGPL-3.0 license. <a href="https://github.com/aree6/FitVerse" style="color:#6ee7b7;">Source code on GitHub</a>. Every line is auditable. Your workout data never leaves your device — all analytics run locally in your browser. Nothing is uploaded to FitVerse servers. Read our <a href="/privacy/" style="color:#6ee7b7;">privacy policy</a> for the full breakdown.</p>
 
         <h2 style="font-size:1.5rem;margin:2rem 0 0.75rem;">Learn more</h2>
         <ul style="margin-left:1.5rem;margin-bottom:1rem;">

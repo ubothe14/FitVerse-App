@@ -4,5 +4,5 @@ export default {
   prerender: true,
   title: 'How FitVerse Works — Import, Analyze, Improve Your Training',
   description:
-    'See exactly how FitVerse turns your Hevy, Strong, or Lyfta logs into actionable workout insights. Muscle heatmaps, plateau detection, set-by-set coaching feedback, and AI-ready exports — all computed locally, 100% free.',
+    'See how FitVerse turns your workout logs into muscle heatmaps, plateau detection, set-by-set coaching feedback, AI-ready exports, and secure session access with Google sign-in.',
 } satisfies Config;

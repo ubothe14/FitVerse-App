@@ -15,21 +15,21 @@ function Page() {
         <section>
           <h2 className="text-lg font-semibold text-white mb-3">What is FitVerse?</h2>
           <p className="text-slate-300 leading-relaxed mb-4">
-            FitVerse is a free and open source workout analytics tool that connects to Hevy, Strong, or Lyfta and provides insights your logging app doesn&rsquo;t offer &mdash; muscle heatmaps, plateau detection, set-by-set feedback, PR tracking, and AI-ready exports. Everything runs locally in your browser. See the <a href={assetPath('about/')} className="text-emerald-300/80 hover:text-emerald-400 transition-colors duration-200">About</a> page for more.
+            FitVerse is a browser-first workout analytics dashboard that turns Hevy, Strong, Lyfta, Motra, or CSV workout logs into muscle heatmaps, plateau detection, PR tracking, set-by-set coaching feedback, and AI-ready export data. It uses secure Google sign-in for sessions and keeps your training analytics private. Learn more on the <a href={assetPath('about/')} className="text-emerald-300/80 hover:text-emerald-400 transition-colors duration-200">About</a> page.
           </p>
         </section>
 
         <section>
           <h2 className="text-lg font-semibold text-white mb-3">Does FitVerse store my workout data?</h2>
           <p className="text-slate-300 leading-relaxed mb-4">
-            No. FitVerse does not store your full training history on any FitVerse-owned server. All computation happens locally in your browser using IndexedDB. We never see your sets, reps, or exercise history. For full details, read the <a href={assetPath('privacy/')} className="text-emerald-300/80 hover:text-emerald-400 transition-colors duration-200">Privacy</a> page.
+            No full workout history is stored on FitVerse servers. Your workout data is stored locally in your browser and processed there. The only server-side state is secure session handling for your account and occasional API proxying during Hevy or Lyfta sync. For full details, read the <a href={assetPath('privacy/')} className="text-emerald-300/80 hover:text-emerald-400 transition-colors duration-200">Privacy</a> page.
           </p>
         </section>
 
         <section>
           <h2 className="text-lg font-semibold text-white mb-3">Which workout apps are supported?</h2>
           <p className="text-slate-300 leading-relaxed mb-4">
-            FitVerse supports <strong>Hevy</strong> (via API sync, recommended), <strong>Strong</strong> (via CSV import), and <strong>Lyfta</strong> (via CSV import). You can also combine data from multiple apps into one unified dashboard. See <a href={assetPath('supported-apps/')} className="text-emerald-300/80 hover:text-emerald-400 transition-colors duration-200">Supported apps</a> for step-by-step import guides.
+            FitVerse supports <strong>Hevy</strong> (API sync), <strong>Lyfta</strong> (API sync), and <strong>Strong</strong> (CSV import). It also works with generic workout CSV exports and Motra. You can combine multiple sources into one unified dashboard. See <a href={assetPath('supported-apps/')} className="text-emerald-300/80 hover:text-emerald-400 transition-colors duration-200">Supported apps</a> for step-by-step guides.
           </p>
         </section>
 
@@ -64,7 +64,14 @@ function Page() {
         <section>
           <h2 className="text-lg font-semibold text-white mb-3">Why do some charts look wrong?</h2>
           <p className="text-slate-300 leading-relaxed mb-4">
-            Charts are recalculated based on the selected date range in the calendar filter. If a date range is active, all metrics reflect only that window &mdash; which can make charts look different than expected. Clear the calendar filter or select &ldquo;All time&rdquo; to see your full history. Also, make sure you&rsquo;ve imported enough data for meaningful trends. See the <a href={assetPath('how-it-works/')} className="text-emerald-300/80 hover:text-emerald-400 transition-colors duration-200">How it works</a> guide for calendar filtering details.
+            FitVerse charts reflect the active date filter and the workout data you have imported. If a date range is selected, metrics are computed only for that window, which can make a chart look different than your full history. Clear filters, choose “All time,” and verify your exercise mapping for the most consistent view. See the <a href={assetPath('how-it-works/')} className="text-emerald-300/80 hover:text-emerald-400 transition-colors duration-200">How it works</a> guide for calendar filtering details.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-lg font-semibold text-white mb-3">Why do I need Google sign-in?</h2>
+          <p className="text-slate-300 leading-relaxed mb-4">
+            Google sign-in is used to keep your FitVerse session secure and persistent across browser refreshes. It does not mean FitVerse stores your workout history on a server — it only helps manage your account session and preferences safely.
           </p>
         </section>
 

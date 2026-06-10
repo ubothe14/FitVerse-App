@@ -43,7 +43,7 @@ function Page() {
                   <td className="py-2 pr-4">Polished &amp; fast. Best UX in the category, but development has slowed.</td>
                   <td className="py-2 pr-4">Modern &amp; clean. Newer player with active development, but occasional stability bugs.</td>
                   <td className="py-2 pr-4">Minimal &amp; focused. The OG tracker, but hasn't received meaningful updates in years — feels abandoned.</td>
-                  <td className="py-2"><span className="text-emerald-300/80">Free, open source add-on to your logger.</span> Not a replacement.</td>
+                  <td className="py-2"><span className="text-emerald-300/80">Free analytics add-on to your logger.</span> Not a replacement.</td>
                 </tr>
                 <tr className="border-b border-white/5">
                   <td className="py-2 pr-4">Exercise library</td>
@@ -113,7 +113,7 @@ function Page() {
                   <td className="py-2 pr-4">$23.99/yr</td>
                   <td className="py-2 pr-4">Free + Lyfta Pro</td>
                   <td className="py-2 pr-4">$29.99/yr</td>
-                  <td className="py-2 text-emerald-300/80 font-semibold">Free &amp; open source (AGPL-3.0)</td>
+                  <td className="py-2 text-emerald-300/80 font-semibold">Free under AGPL-3.0</td>
                 </tr>
                 <tr className="border-b border-white/5">
                   <td className="py-2 pr-4">What users love</td>
@@ -169,7 +169,7 @@ function Page() {
         <section>
           <h2 className="text-lg font-semibold text-white mb-3">Pick any logger. FitVerse fills the rest.</h2>
           <p className="text-slate-300 leading-relaxed mb-4">
-            FitVerse is not a replacement for Hevy, Lyfta, or Strong. It&rsquo;s a free, open source analytics add-on that plugs into whichever logger you already use.
+            FitVerse is not a replacement for Hevy, Lyfta, or Strong. It&rsquo;s a free analytics add-on that plugs into whichever logger you already use.
           </p>
           <ul className="list-disc list-inside space-y-1 text-slate-300 leading-relaxed mb-4">
             <li><strong className="text-white">Hevy</strong> &mdash; Connect via OAuth2 (credentials) or Pro API key. Automatic sync.</li>
@@ -180,7 +180,7 @@ function Page() {
             Switched apps over the years? FitVerse merges data from multiple sources into one dashboard. Exercise names are normalized across platforms, duplicates are detected and skipped, and every set is labeled so you know where it came from. Your entire training history, unified.
           </p>
           <p className="text-slate-300 leading-relaxed mb-4">
-            All processing runs in your browser. No account needed. Nothing stored on our servers. Free and open source under AGPL-3.0.
+            All processing runs in your browser. No account needed. Nothing stored on our servers. Free under AGPL-3.0.
           </p>
           <p className="text-slate-300 leading-relaxed">
             See the <a href={assetPath('how-it-works/')} className="text-emerald-300/80 hover:text-emerald-400 transition-colors duration-200">How it works</a> guide for a full walkthrough of every feature.

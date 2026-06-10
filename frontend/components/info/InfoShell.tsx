@@ -155,12 +155,12 @@ export const InfoShell: React.FC<InfoShellProps> = ({ activeNav = null, title, s
           <div className="col-span-2 sm:col-span-1">
             <h3 className={`font-semibold mb-3 ${isLight ? 'text-slate-900' : 'text-white'}`}>FitVerse</h3>
             <p className="text-slate-500 leading-relaxed text-xs">
-              Free and open source workout analytics. No account needed. Runs locally in your browser.
+              Free workout analytics. No account needed. Runs locally in your browser.
             </p>
           </div>
         </div>
         <div className={`max-w-6xl mx-auto mt-8 pt-6 border-t text-center text-xs ${isLight ? 'border-black/5 text-slate-500' : 'border-white/5 text-slate-600'}`}>
-          &copy; {new Date().getFullYear()} FitVerse. Open source under AGPL-3.0.
+          &copy; {new Date().getFullYear()} FitVerse. Licensed under AGPL-3.0.
         </div>
       </footer>
     </div>

@@ -1,7 +1,7 @@
 FitVerse
 https://fitverse.app/
 
-FitVerse is a free and open source workout analytics tool that tells you what your training data actually means. Connect Hevy, Strong, or Lyfta in seconds. All analysis runs locally in your browser — no server-side storage. Source code: https://github.com/aree6/FitVerse (AGPL-3.0).
+FitVerse is a free workout analytics tool that tells you what your training data actually means. Connect Hevy, Strong, or Lyfta in seconds. All analysis runs locally in your browser — no server-side storage. Source code: https://github.com/aree6/FitVerse (AGPL-3.0).
 
 Perfect for lifters who want:
 - Interactive muscle heatmaps with rolling 7-day windows and per-exercise drill-down
@@ -24,7 +24,7 @@ What FitVerse does:
 - Analyze every set in a workout with plain-English feedback
 - Track smart PRs including 2-month bests and premature PR detection
 - Export structured training data for AI analysis
-- Offer every feature completely free (open source, AGPL-3.0)
+- Offer every feature completely free (AGPL-3.0)
 
 What FitVerse does not do:
 - It is not a workout program generator or coaching service
@@ -34,7 +34,7 @@ What FitVerse does not do:
 
 Key pages:
 - https://fitverse.app/ - Landing page and interactive web app
-- https://fitverse.app/about/ - About FitVerse (open source, free)
+- https://fitverse.app/about/ - About FitVerse (free)
 - https://fitverse.app/how-it-works/ - How the analytics work
 - https://fitverse.app/privacy/ - Privacy model
 - https://fitverse.app/faq/ - FAQ

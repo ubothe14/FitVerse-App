@@ -25,10 +25,22 @@ export const createAuthRouter = () => {
       const payload = await response.json();
       const clientID = process.env.GOOGLE_CLIENT_ID;
 
-      // Verify audience matches our Google Client ID
-      if (clientID && payload.aud !== clientID) {
-        console.error(`❌ Google Client ID mismatch. Expected: ${clientID}, got: ${payload.aud}`);
+      const aud = payload.aud;
+      const validAud = clientID && (Array.isArray(aud) ? aud.includes(clientID) : aud === clientID);
+      if (clientID && !validAud) {
+        console.error(`❌ Google Client ID mismatch. Expected: ${clientID}, got: ${aud}`);
         return res.status(401).json({ error: 'Audience mismatch. Invalid Client ID configuration.' });
+      }
+
+      const issuer = payload.iss;
+      if (issuer !== 'https://accounts.google.com' && issuer !== 'accounts.google.com') {
+        console.error(`❌ Invalid Google token issuer: ${issuer}`);
+        return res.status(401).json({ error: 'Invalid Google token issuer.' });
+      }
+
+      const emailVerified = payload.email_verified === true || payload.email_verified === 'true';
+      if (!emailVerified) {
+        return res.status(401).json({ error: 'Google email is not verified.' });
       }
 
       const email = String(payload.email || '').toLowerCase().trim();

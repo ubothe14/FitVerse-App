@@ -121,6 +121,8 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthComplete, onClose }) =
       gsi.initialize({
         client_id: clientId,
         callback: handleCredentialResponse,
+        auto_select: false,
+        cancel_on_tap_outside: true,
       });
 
       const buttonDiv = document.getElementById('google-signin-button');
@@ -173,16 +175,13 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthComplete, onClose }) =
     }
   };
 
-  // Handle Mock Google Login
   const handleGoogleLogin = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setName('Utkarsh Bothe');
-      setEmail('botheutkarsh@gmail.com');
-      // Go to profile setup step to calculate BMR and personalize targets
-      setStep('profile');
-    }, 1500);
+    const gsi = (window as any).google?.accounts?.id;
+    if (!gsi) {
+      alert('Google sign-in is still loading. Please wait a moment and try again.');
+      return;
+    }
+    gsi.prompt();
   };
 
   // Complete profile registration and set target macros in DB
@@ -308,7 +307,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthComplete, onClose }) =
                       d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
                     />
                   </svg>
-                  <span>Continue with Google (Demo Mock)</span>
+                  <span>Continue with Google</span>
                 </button>
               )}
             </div>
