@@ -48,10 +48,17 @@ export const createAuthRouter = () => {
           process.env.JWT_SECRET || 'fallback_secret',
           { expiresIn: '7d' }
         );
+        // Set httpOnly cookie for secure sessions
+        res.cookie('fitverse_auth', token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
 
         return res.json({
           exists: true,
-          token,
+          token, // still return for clients that prefer header storage
           profile: {
             name: existingUser.name,
             email: existingUser.email,
@@ -105,6 +112,14 @@ export const createAuthRouter = () => {
         { expiresIn: '7d' }
       );
 
+      // Set httpOnly cookie for secure sessions
+      res.cookie('fitverse_auth', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+
       return res.json({
         token,
         profile: {
@@ -124,6 +139,12 @@ export const createAuthRouter = () => {
       console.error(`❌ Email login error:`, err);
       return res.status(500).json({ error: 'Login failed due to server error' });
     }
+  });
+
+  // Logout route - clears cookie
+  router.post('/logout', (_req, res) => {
+    res.clearCookie('fitverse_auth', { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production' });
+    res.json({ success: true });
   });
 
   return router;

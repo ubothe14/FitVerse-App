@@ -41,6 +41,9 @@ export function CommonHead() {
           document.documentElement.dataset.font = font;
         } catch(e) {}
       ` }} />
+
+      {/* Google Identity Services for Google Sign-In */}
+      <script src="https://accounts.google.com/gsi/client" async defer></script>
     </>
   );
 }

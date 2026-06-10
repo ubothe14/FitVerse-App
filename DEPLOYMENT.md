@@ -3,6 +3,7 @@
 This project uses a split deployment:
 
 - Frontend: Netlify (static Vite build)
+ - Frontend: Vercel (static Vite build)
 - Backend: Render or Railway (Node/Express proxy for the Hevy API)
 
 The backend is required for Hevy login because:
@@ -73,6 +74,9 @@ Important:
 
 - `HEVY_X_API_KEY` = `klean_kanteen_insulated`
 - `CORS_ORIGINS` = `https://fitverse.app,http://localhost:3000`
+ - `MONGODB_URI` = `<your-mongodb-connection-string>`
+ - `JWT_SECRET` = `<a long random secret used to sign JWTs>`
+ - `GOOGLE_CLIENT_ID` = `<your-google-oauth-client-id>`
 
 4. Click **Create Web Service**
 
@@ -127,6 +131,9 @@ To ensure it runs the backend:
 
 - `HEVY_X_API_KEY` = `klean_kanteen_insulated`
 - `CORS_ORIGINS` = `https://fitverse.app,http://localhost:3000`
+ - `MONGODB_URI` = `<your-mongodb-connection-string>`
+ - `JWT_SECRET` = `<a long random secret used to sign JWTs>`
+ - `GOOGLE_CLIENT_ID` = `<your-google-oauth-client-id>`
 
 ### 2.5 Confirm start command
 
@@ -139,42 +146,31 @@ If it asks:
 
 
 ## 3) Deploy the frontend on Netlify
+## 3) Deploy the frontend on Vercel
 
 ### 3.1 Add frontend environment variables
 
-Your frontend needs to know where the backend is.
+Your frontend needs to know where the backend is and the Google Client ID for Sign-In.
 
-1. Open https://app.netlify.com
-2. Click your site (fitverse)
-3. Go to **Site configuration**
-4. Go to **Build & deploy**
-5. Go to **Environment**
-6. Click **Add a variable**
-
-Add:
+1. Open https://vercel.com
+2. Import your GitHub repository (follow the Vercel prompts)
+3. In your project settings, go to **Environment Variables**
+4. Click **Add** and add these variables for both `Production` and `Preview` as needed:
 
 - `VITE_BACKEND_URL` = `https://YOUR_BACKEND_URL`
-
-Optional (only if you deploy under a subpath, e.g. GitHub Pages project site):
-
-- `VITE_BASE_PATH` = `/FitVerse/`
+- `VITE_GOOGLE_CLIENT_ID` = `<your-google-client-id>`
+- Optional: `VITE_BASE_PATH` = `/FitVerse/` (only if deploying under a subpath)
 
 Notes:
 
-- `VITE_BACKEND_URL` must be the public URL of your deployed backend (Render/Railway), not `localhost`.
+- `VITE_BACKEND_URL` must be the public URL of your deployed backend (Render), not `localhost`.
 - `VITE_BACKEND_URL` should be the backend *origin* (no trailing `/api`). The frontend will call `${VITE_BACKEND_URL}/api/...`.
 - Example: `https://fitverse-backend.onrender.com`
 
-Base path notes:
-
-- The app supports deployments at the domain root (`/`) and under a subpath (like `/FitVerse/`).
-- When `VITE_BASE_PATH` is set, Vite will emit the correct asset URLs and the React Router `basename` will match automatically.
-
 ### 3.2 Trigger a deploy
 
-1. Go to **Deploys** tab
-2. Click **Trigger deploy**
-3. Choose **Deploy site**
+1. Push to the configured Git branch (e.g., `main`) or trigger a redeploy in the Vercel dashboard.
+2. Vercel will run the build; your site will be published automatically.
 
 
 ## 4) First-run checklist

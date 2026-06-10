@@ -106,6 +106,16 @@ export const createUserRouter = () => {
         );
       }
 
+      // If a new token was created, set httpOnly cookie for session
+      if (token) {
+        res.cookie('fitverse_auth', token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+      }
+
       return res.json({ profile: updatedUser, token });
     } catch (err: any) {
       const status = err.statusCode || 500;

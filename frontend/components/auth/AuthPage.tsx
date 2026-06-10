@@ -116,8 +116,10 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthComplete, onClose }) =
       const gsi = (window as any).google?.accounts?.id;
       if (!gsi) return false;
 
+      const clientId = (import.meta.env.VITE_GOOGLE_CLIENT_ID as string) || '';
+
       gsi.initialize({
-        client_id: '159256937485-j8dnefdbpvd3k9booai4vehmcugctick.apps.googleusercontent.com',
+        client_id: clientId,
         callback: handleCredentialResponse,
       });
 

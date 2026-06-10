@@ -22,13 +22,13 @@ A comprehensive fitness analytics platform with AI-powered nutrition tracking, w
 ## Getting Started
 
 ```bash
-git clone https://github.com/ubothe14/FitVerse-.git
-cd FitVerse-
+git clone https://github.com/ubothe14/FitVerse-App.git
+cd FitVerse-App
 npm install
 npm run dev
 ```
 
-## Author
+## Owner
 
-**Utkarsh Bothe**
+**ubothe14**
 - GitHub: [@ubothe14](https://github.com/ubothe14)

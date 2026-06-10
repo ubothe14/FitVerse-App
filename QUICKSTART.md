@@ -12,8 +12,8 @@ Get up and running with FitVerse in 5 minutes!
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/aree6/FitVerse.git
-   cd FitVerse
+   git clone https://github.com/ubothe14/FitVerse-App.git
+   cd FitVerse-App
    ```
 
 2. **Install dependencies**

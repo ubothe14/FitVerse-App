@@ -5,7 +5,6 @@ import type { BodyMapGender } from '../../bodyMap/BodyMap';
 import type { DailySummary, ExerciseStats, WorkoutSet } from '../../../types';
 import type { WeightUnit, TimeFilterMode } from '../../../utils/storage/localStorage';
 import type { TrainingLevel } from '../../../utils/muscle/hypertrophy/muscleParams';
-import { DashboardAIAnalysisCard } from './DashboardAIAnalysisCard';
 
 const WeeklySetsCard = React.lazy(() => import('../weeklySets/WeeklySetsCard').then((m) => ({ default: m.WeeklySetsCard })));
 const MuscleTrendCard = React.lazy(() => import('../muscleTrend/MuscleTrendCard').then((m) => ({ default: m.MuscleTrendCard })));
@@ -171,14 +170,7 @@ export const DashboardPrimaryCharts: React.FC<DashboardPrimaryChartsProps> = ({
       </LazyRender>
     </div>
 
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-2">
-      <DashboardAIAnalysisCard
-        fullData={fullData}
-        dailyData={dailyData}
-        exerciseStats={exerciseStats}
-        effectiveNow={effectiveNow}
-      />
-
+    <div className="grid grid-cols-1 gap-2 sm:gap-2">
       <LazyRender className="min-w-0" placeholder={<ChartSkeleton className="min-h-[400px] sm:min-h-[520px]" />}>
         <Suspense fallback={<ChartSkeleton className="min-h-[400px] sm:min-h-[520px]" />}>
           <VolumeDensityCard
