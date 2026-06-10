@@ -1,0 +1,230 @@
+import React from 'react';
+import { Area, ComposedChart, Line, ResponsiveContainer, Tooltip as RechartsTooltip, XAxis, YAxis } from 'recharts';
+import { TrendingDown, TrendingUp, X } from 'lucide-react';
+import { LazyRender } from '../../ui/LazyRender';
+import { ChartSkeleton } from '../../ui/ChartSkeleton';
+import { CHART_TOOLTIP_STYLE } from '../../../utils/ui/uiConstants';
+import { formatNumber } from '../../../utils/format/formatters';
+import { getRechartsXAxisInterval, RECHARTS_XAXIS_PADDING } from '../../../utils/chart/chartEnhancements';
+import { HEADLESS_MUSCLE_NAMES } from '../../../utils/muscle/mapping';
+import { SEMI_FANCY_FONT } from '../../../utils/ui/uiConstants';
+import { SVG_MUSCLE_NAMES } from '../../../utils/muscle/mapping';
+import type { WeeklySetsWindow } from '../../../utils/muscle/analytics';
+import type { ExerciseAsset } from '../../../utils/data/exerciseAssets';
+import type { ExerciseMuscleData } from '../../../utils/muscle/mapping';
+import type { MuscleVolumeThresholds } from '../../../utils/muscle/hypertrophy/muscleParams';
+import { MuscleAnalysisExerciseList } from './MuscleAnalysisExerciseList';
+import { LifetimeAchievementCard } from './LifetimeAchievementCard';
+import type { LifetimeAchievementData } from '../hooks/useLifetimeAchievement';
+
+interface MuscleAnalysisDetailPanelProps {
+  selectedMuscle: string | null;
+  viewMode: 'muscle' | 'group' | 'headless';
+  weeklySetsWindow: WeeklySetsWindow;
+  weeklySetsSummary: number | null;
+  volumeDelta: { direction: 'up' | 'down' | 'same'; formattedPercent: string } | null;
+  trendData: Array<{ period: string; sets: number }>;
+  windowedSelectionBreakdown: { totalSetsInWindow: number } | null;
+  contributingExercises: Array<{ name: string; sets: number; primarySets: number; secondarySets: number; strengthTrend: number | null; strengthLabel: string | null }>;
+  assetsMap: Map<string, ExerciseAsset> | null;
+  exerciseMuscleData: Map<string, ExerciseMuscleData>;
+  volumeThresholds: MuscleVolumeThresholds;
+  secondarySetMultiplier: number;
+  onExerciseClick?: (exerciseName: string) => void;
+  clearSelection: () => void;
+  lifetimeAchievement: LifetimeAchievementData | null;
+  onMuscleClick?: (muscleId: string) => void;
+}
+
+export const MuscleAnalysisDetailPanel: React.FC<MuscleAnalysisDetailPanelProps> = ({
+  selectedMuscle,
+  viewMode,
+  weeklySetsWindow,
+  weeklySetsSummary,
+  volumeDelta,
+  trendData,
+  windowedSelectionBreakdown,
+  contributingExercises,
+  assetsMap,
+  exerciseMuscleData,
+  volumeThresholds,
+  secondarySetMultiplier,
+  onExerciseClick,
+  clearSelection,
+  lifetimeAchievement,
+  onMuscleClick,
+}) => {
+  const title = selectedMuscle
+    ? (viewMode === 'group'
+      ? selectedMuscle
+      : viewMode === 'headless'
+        ? ((HEADLESS_MUSCLE_NAMES as any)[selectedMuscle] ?? selectedMuscle)
+        : SVG_MUSCLE_NAMES[selectedMuscle])
+    : (viewMode === 'group' ? 'All Groups' : viewMode === 'headless' ? 'All Muscles' : 'All Muscles');
+
+  const totalSetsInWindow = windowedSelectionBreakdown?.totalSetsInWindow ?? 0;
+
+  return (
+    <div data-muscle-detail-panel className="bg-black/20 rounded-xl border border-slate-700/50 overflow-hidden flex flex-col">
+      <div className="bg-black/20  p-3 flex items-center justify-between">
+        <div className="flex items-center gap-2 min-w-0 flex-wrap">
+          <h2 className="text-lg font-bold text-white truncate" style={SEMI_FANCY_FONT}>{title}</h2>
+          <span
+            className="text-red-400 text-sm font-semibold whitespace-nowrap"
+            title={selectedMuscle ? 'sets in current filter' : ''}
+          >
+            {selectedMuscle
+              ? `${Math.round(totalSetsInWindow * 10) / 10} sets`
+              : null}
+          </span>
+          <span
+            className="text-cyan-400 text-sm font-semibold whitespace-nowrap"
+            title="avg weekly sets in selected window"
+          >
+            {weeklySetsSummary !== null && `${weeklySetsSummary.toFixed(1)} sets/wk`}
+          </span>
+          {volumeDelta && volumeDelta.direction !== 'same' && (
+            <span className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-bold ${volumeDelta.direction === 'up'
+              ? 'bg-emerald-500/10 text-emerald-400'
+              : 'bg-rose-500/10 text-rose-400'
+              }`}>
+              {volumeDelta.direction === 'up' ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+              {volumeDelta.formattedPercent} vs prev {weeklySetsWindow === '7d' ? 'wk' : weeklySetsWindow === '30d' ? 'mo' : 'yr'}
+            </span>
+          )}
+        </div>
+        {selectedMuscle && (
+          <button
+            onClick={clearSelection}
+            className="p-1.5 hover:bg-black/60 rounded-lg transition-colors cursor-pointer"
+          >
+            <X className="w-5 h-5 text-slate-400" />
+          </button>
+        )}
+      </div>
+
+      <div className="p-3 space-y-3">
+        <div>
+          <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-slate-400" />
+              <h3 className="text-sm font-semibold text-white">Weekly sets</h3>
+            </div>
+          </div>
+          <div className="h-32 bg-black/20 rounded-lg p-2">
+            {trendData.length > 0 ? (
+              <LazyRender className="w-full h-full" placeholder={<ChartSkeleton className="h-full" />}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <ComposedChart data={trendData}>
+                    <defs>
+                      <linearGradient id="muscleColorGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor={volumeDelta?.direction === 'down' ? '#f43f5e' : '#10b981'} stopOpacity={0.4} />
+                        <stop offset="95%" stopColor={volumeDelta?.direction === 'down' ? '#f43f5e' : '#10b981'} stopOpacity={0} />
+                      </linearGradient>
+                      <linearGradient id="efGrad" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stopColor="#ffffff" stopOpacity="0" />
+                        <stop offset="12%" stopColor="#ffffff" stopOpacity="1" />
+                        <stop offset="88%" stopColor="#ffffff" stopOpacity="1" />
+                        <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+                      </linearGradient>
+                      <mask id="efMask" maskUnits="objectBoundingBox" maskContentUnits="objectBoundingBox">
+                        <rect x="0" y="0" width="1" height="1" fill="url(#efGrad)" />
+                      </mask>
+                      <marker id="muscleArrowUp" viewBox="0 0 6 10" refX="4.8" refY="5" markerWidth="5" markerHeight="9" orient="auto" markerUnits="userSpaceOnUse">
+                        <path d="M 0 0 L 6 5 L 0 10 z" fill="#10b981" />
+                      </marker>
+                      <marker id="muscleArrowDown" viewBox="0 0 6 10" refX="4.8" refY="5" markerWidth="5" markerHeight="9" orient="auto" markerUnits="userSpaceOnUse">
+                        <path d="M 0 0 L 6 5 L 0 10 z" fill="#f43f5e" />
+                      </marker>
+                    </defs>
+                    <XAxis
+                      dataKey="period"
+                      tick={{ fill: '#64748b', fontSize: 9 }}
+                      tickLine={false}
+                      axisLine={false}
+                      padding={RECHARTS_XAXIS_PADDING as any}
+                      interval={getRechartsXAxisInterval(trendData.length, 7)}
+                      tickFormatter={(value) => {
+                        if (!value || typeof value !== 'string') return value;
+                        if (value.includes('-')) {
+                          const date = new Date(value);
+                          if (!isNaN(date.getTime())) {
+                            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                          }
+                        }
+                        return value;
+                      }}
+                    />
+                    <YAxis hide />
+                    <RechartsTooltip
+                      contentStyle={CHART_TOOLTIP_STYLE}
+                      labelStyle={{ color: 'var(--text-primary)' }}
+                      formatter={(value: any) => {
+                        const v = formatNumber(Number(value), { maxDecimals: 1 });
+                        return [`${v} sets/wk`];
+                      }}
+                    />
+                    <><Area
+                      type="monotone"
+                      dataKey="sets"
+                      stroke="none"
+                      fill="url(#muscleColorGradient)"
+                      mask="url(#efMask)"
+                      dot={false}
+                      activeDot={false}
+                      animationDuration={500}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="sets"
+                      stroke={volumeDelta?.direction === 'down' ? '#f43f5e' : '#10b981'}
+                      strokeWidth={2}
+                      fill="none"
+                      dot={false}
+                      activeDot={{ r: 5, strokeWidth: 0 }}
+                      isAnimationActive={true}
+                      animationDuration={500}
+                      markerEnd={`url(#${volumeDelta?.direction === 'down' ? 'muscleArrowDown' : 'muscleArrowUp'})`}
+                    />
+                    </>
+                  </ComposedChart>
+                </ResponsiveContainer>
+              </LazyRender>
+            ) : (
+              <div className="flex items-center justify-center h-full text-slate-500 text-sm">
+                No muscle data for this period yet
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {windowedSelectionBreakdown && (
+        <div className="border-t border-slate-800/30 flex-1 flex flex-col min-h-0">
+          <div className={`flex-1 flex flex-col min-h-0 ${lifetimeAchievement ? 'lg:min-h-0 lg:max-h-[35%]' : ''}`}>
+            <MuscleAnalysisExerciseList
+              contributingExercises={contributingExercises}
+              assetsMap={assetsMap}
+              exerciseMuscleData={exerciseMuscleData}
+              totalSetsInWindow={totalSetsInWindow}
+              volumeThresholds={volumeThresholds}
+              secondarySetMultiplier={secondarySetMultiplier}
+              onExerciseClick={onExerciseClick}
+            />
+          </div>
+          {lifetimeAchievement && (
+            <div className="border-t border-slate-800/30 p-3 flex-shrink-0">
+              <LifetimeAchievementCard data={lifetimeAchievement} selectedMuscleId={selectedMuscle} onMuscleClick={onMuscleClick} />
+            </div>
+          )}
+        </div>
+      )}
+
+      {!windowedSelectionBreakdown && lifetimeAchievement && (
+        <div className="border-t border-slate-800/30 p-3 flex-1">
+          <LifetimeAchievementCard data={lifetimeAchievement} selectedMuscleId={selectedMuscle} onMuscleClick={onMuscleClick} />
+        </div>
+      )}
+    </div>
+  );
+};

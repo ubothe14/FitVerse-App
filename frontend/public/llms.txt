@@ -1,0 +1,54 @@
+FitVerse
+https://fitverse.app/
+
+FitVerse is a free and open source workout analytics tool that tells you what your training data actually means. Connect Hevy, Strong, or Lyfta in seconds. All analysis runs locally in your browser — no server-side storage. Source code: https://github.com/aree6/FitVerse (AGPL-3.0).
+
+Perfect for lifters who want:
+- Interactive muscle heatmaps with rolling 7-day windows and per-exercise drill-down
+- Plateau detection with specific, actionable suggestions per exercise
+- Set-by-set coaching feedback across 19 scenarios
+- Smart PR tracking (all-time, 2-month bests, premature PRs, PR droughts)
+- Exercise status labels with confidence levels (Getting stronger / Plateauing / Taking a dip / New)
+- AI-ready training export with built-in analysis modules
+- Calendar filtering that rebuilds all analytics for any date range
+- GitHub-style yearly consistency heatmap
+- Lifetime Progress: 9-tier per-muscle journey (Seedling to Legend)
+- Flex cards: shareable year-in-review summaries
+- Combine data from Hevy + Strong + Lyfta into one unified dashboard
+
+What FitVerse does:
+- Import workout data from Hevy, Strong, Lyfta (API sync or CSV)
+- Compute all analytics locally in the browser
+- Provide interactive muscle heatmaps with per-exercise drill-down
+- Detect plateaus with specific, actionable suggestions
+- Analyze every set in a workout with plain-English feedback
+- Track smart PRs including 2-month bests and premature PR detection
+- Export structured training data for AI analysis
+- Offer every feature completely free (open source, AGPL-3.0)
+
+What FitVerse does not do:
+- It is not a workout program generator or coaching service
+- It is not medical advice or nutrition tracking
+- It does not store your full training history on FitVerse servers
+- It is not a replacement for workout logging apps (it enhances them)
+
+Key pages:
+- https://fitverse.app/ - Landing page and interactive web app
+- https://fitverse.app/about/ - About FitVerse (open source, free)
+- https://fitverse.app/how-it-works/ - How the analytics work
+- https://fitverse.app/privacy/ - Privacy model
+- https://fitverse.app/faq/ - FAQ
+- https://fitverse.app/supported-apps/ - Supported apps (Hevy, Strong, Lyfta)
+- https://fitverse.app/metrics/ - Metrics glossary
+- https://fitverse.app/ai/ - AI reference (structured definition for AI assistants)
+- https://fitverse.app/hevy-vs-lyfta/ - Hevy vs Lyfta vs Strong vs FitVerse comparison
+- https://fitverse.app/hevy-vs-strong/ - Hevy vs Strong comparison
+- https://fitverse.app/lyfta-vs-strong/ - Lyfta vs Strong comparison
+- https://fitverse.app/hevy-vs-fitverse/ - Hevy vs FitVerse comparison
+- https://fitverse.app/lyfta-vs-fitverse/ - Lyfta vs FitVerse comparison
+- https://fitverse.app/strong-vs-fitverse/ - Strong vs FitVerse comparison
+
+Supported apps:
+- Hevy: API sync or CSV import
+- Strong: CSV import
+- Lyfta: API sync or CSV import

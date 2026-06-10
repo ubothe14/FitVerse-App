@@ -1,0 +1,66 @@
+import React from 'react';
+import { ExerciseAsset } from '../../../utils/data/exerciseAssets';
+import { convertWeight } from '../../../utils/format/units';
+import type { WeightUnit } from '../../../utils/storage/localStorage';
+import { SEMI_FANCY_FONT } from '../../../utils/ui/uiConstants';
+import { ExerciseThumbnail } from '../../common/ExerciseThumbnail';
+import { Sparkline } from './HistorySparkline';
+import type { GroupedExercise } from '../utils/historySessions';
+import { getLoadProgressionDirection } from '../../../utils/exercise/loadProgression';
+
+interface HistoryExerciseHeaderProps {
+  group: GroupedExercise;
+  asset?: ExerciseAsset;
+  sparklineData: number[];
+  exerciseBest: number;
+  weightUnit: WeightUnit;
+  onExerciseClick?: (exerciseName: string) => void;
+}
+
+export const HistoryExerciseHeader: React.FC<HistoryExerciseHeaderProps> = ({
+  group,
+  asset,
+  sparklineData,
+  exerciseBest,
+  weightUnit,
+  onExerciseClick,
+}) => {
+  const isLowerWeightBetter = getLoadProgressionDirection(group.exerciseName) === 'lower';
+
+  return (
+    <div
+      className="grid grid-cols-[2.5rem_1fr] grid-rows-2 gap-x-3 gap-y-1 mb-4 cursor-pointer select-none sm:flex sm:items-center sm:gap-3"
+      onClick={() => onExerciseClick?.(group.exerciseName)}
+      title="Open exercise details"
+    >
+      <ExerciseThumbnail
+        asset={asset}
+        className="w-10 h-10 rounded lg:rounded-md flex-shrink-0 row-span-2"
+        imageClassName="w-full h-full rounded lg:rounded-md object-cover bg-white"
+      />
+
+      <div className="flex items-center gap-2 min-w-0 col-start-2 row-start-1">
+        <h4
+          className="text-slate-200 text-sm sm:text-lg line-clamp-1 min-w-0 flex-1"
+          style={SEMI_FANCY_FONT}
+          title={group.exerciseName}
+        >
+          {group.exerciseName}
+        </h4>
+      </div>
+
+      <div className="min-w-0 col-start-2 row-start-2 sm:flex-1">
+        <div className="flex flex-wrap items-center gap-2 text-[11px] sm:text-sm text-slate-400 overflow-visible">
+          {sparklineData.length >= 2 && (
+            <span className="inline-flex items-center opacity-70 pr-1">
+              <Sparkline data={sparklineData} width={62} height={20} title="Volume trend over last 6 sessions" />
+            </span>
+          )}
+          <span className="text-slate-300">
+            PR: <span className="font-semibold">{convertWeight(Math.abs(exerciseBest), weightUnit)}{weightUnit}{isLowerWeightBetter ? ' less assist' : ''}</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};

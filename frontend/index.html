@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0, user-scalable=yes" />
+    <meta name="theme-color" content="#0b1220" />
+    <meta name='impact-site-verification' value='91d20f84-48ac-47d4-b538-9cfa7cd8fcf2'>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+      (function () {
+        try {
+          var key = 'hevy_analytics_theme_mode';
+          var stored = localStorage.getItem(key);
+          var mode =
+            stored === 'light' || stored === 'medium-dark' || stored === 'midnight-dark' || stored === 'pure-black'
+              ? stored
+              : 'pure-black';
+          document.documentElement.dataset.theme = mode;
+          document.documentElement.style.colorScheme = mode === 'light' ? 'light' : 'dark';
+        } catch (e) {}
+      })();
+    </script>
+    
+    <script>
+      (function () {
+        // GitHub Pages SPA deep-linking support.
+        // If we were redirected via /404.html, restore the original URL so the app can load normally.
+        try {
+          var params = new URLSearchParams(window.location.search || '');
+          var p = params.get('p');
+          var q = params.get('q');
+          var h = params.get('h');
+          if (!p) return;
+
+          params.delete('p');
+          params.delete('q');
+          params.delete('h');
+
+          var rest = params.toString();
+          var search = (q ? decodeURIComponent(q) : '') || (rest ? '?' + rest : '');
+          var hash = (h ? decodeURIComponent(h) : '');
+          var path = decodeURIComponent(p);
+
+          var baseHref = document.querySelector('base')?.getAttribute('href') || '/';
+          var basePath = baseHref.endsWith('/') ? baseHref : baseHref + '/';
+
+          if (basePath !== '/' && path.indexOf(basePath) !== 0) {
+            var baseNoSlash = basePath.slice(0, -1);
+            path = baseNoSlash + (path.startsWith('/') ? path : '/' + path);
+          }
+
+          window.history.replaceState(null, '', path + search + hash);
+        } catch (e) {
+          // ignore
+        }
+      })();
+    </script>
+    
+    <meta name="author" content="FitVerse">
+    <meta name="robots" content="index, follow">
+
+    <base href="%BASE_URL%">
+    <style>
+      /* Custom Scrollbar for a sleeker look */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--scrollbar-track);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--scrollbar-thumb);
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--scrollbar-thumb-hover);
+      }
+      
+      /* Mobile touch improvements */
+      @media (max-width: 640px) {
+        * {
+          -webkit-user-select: none;
+          user-select: none;
+          -webkit-touch-callout: none;
+        }
+        input, textarea, button {
+          -webkit-user-select: text;
+          user-select: text;
+          -webkit-touch-callout: default;
+        }
+      }
+      
+      /* Smooth animations */
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      
+      @keyframes slideIn {
+        from { opacity: 0; transform: translateX(-10px); }
+        to { opacity: 1; transform: translateX(0); }
+      }
+      
+      @keyframes scaleIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+      }
+      
+      .animate-in {
+        animation: fadeIn 0.3s ease-out;
+      }
+      
+      .fade-in {
+        animation: fadeIn 0.3s ease-out;
+      }
+      
+      .slide-in-from-top-2 {
+        animation: slideIn 0.3s ease-out;
+      }
+      
+      .slide-in-from-bottom-2 {
+        animation: slideIn 0.3s ease-out reverse;
+      }
+      
+      /* Smooth transitions for all interactive elements */
+      * {
+        transition-property: color, border-color, opacity, box-shadow;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        transition-duration: 150ms;
+      }
+      
+      /* Chart container animations */
+      [class*="bg-slate-900 border"] {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      [class*="bg-slate-900 border"]:hover {
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+      }
+      
+      /* Noscript fallback styling */
+      .noscript-content {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        color: #e2e8f0;
+        font-family: system-ui, sans-serif;
+        line-height: 1.6;
+      }
+      .noscript-content h1 { font-size: 2rem; margin-bottom: 1rem; }
+      .noscript-content h2 { font-size: 1.5rem; margin: 1.5rem 0 0.75rem; }
+      .noscript-content p { margin-bottom: 1rem; color: #94a3b8; }
+      .noscript-content ul { margin-left: 1.5rem; margin-bottom: 1rem; }
+      .noscript-content li { margin-bottom: 0.5rem; color: #94a3b8; }
+    </style>
+</head>
+  <body class="antialiased h-screen overflow-hidden">
+    <!-- SEO-friendly noscript content for crawlers -->
+    <noscript>
+      <div class="noscript-content" style="background: #0f172a;">
+        <h1>FitVerse — Free &amp; Open Source Workout Analytics</h1>
+        <p>Stop squinting at your workout app's basic charts. FitVerse is a free and open source (AGPL-3.0) workout analytics tool. Connect Hevy, Strong, or Lyfta in seconds. Get interactive muscle heatmaps, automatic plateau detection with actionable fixes, set-by-set coaching feedback, and AI-ready training exports — all computed locally on your device. No account needed.</p>
+
+        <h2>What your workout app doesn&apos;t tell you</h2>
+        <ul>
+          <li><strong>Interactive muscle heatmaps</strong> — Click any muscle to see which exercises built it. Rolling 7-day windows match real recovery patterns.</li>
+          <li><strong>Plateau detection with suggestions</strong> — Every exercise gets a status (Getting stronger / Plateauing / Taking a dip) plus a tiny actionable suggestion: add 1 rep, bump the weight, or deload.</li>
+          <li><strong>Set-by-set coaching feedback</strong> — Open any past workout and get plain-English feedback on every single set across 19 scenarios.</li>
+          <li><strong>Smart PR tracking</strong> — All-time PRs, 2-month bests, premature PR detection, and PR drought alerts.</li>
+          <li><strong>GitHub-style consistency heatmap</strong> — See your entire year's training at a glance with training streaks and consistency scores.</li>
+          <li><strong>AI-ready training export</strong> — One-click export. Paste into any AI for custom analysis — junk volume audit, structural balance, joint health check, or your own prompt.</li>
+          <li><strong>Calendar filtering</strong> — Pick any date range and every chart recalculates for just that window.</li>
+          <li><strong>Lifetime Progress</strong> — 9-tier per-muscle journey from Seedling to Legend with estimated time to next milestone.</li>
+          <li><strong>Combine data sources</strong> — Merge Hevy + Strong + Lyfta into one unified dashboard.</li>
+        </ul>
+
+        <h2>Supported apps</h2>
+        <ul>
+          <li><strong>Hevy</strong> — Direct API sync or CSV import</li>
+          <li><strong>Strong</strong> — CSV data import</li>
+          <li><strong>Lyfta</strong> — CSV data import</li>
+        </ul>
+
+        <h2>Privacy first</h2>
+        <p>Everything runs in your browser. Your workout history never leaves your device. No account required. No server-side storage.</p>
+
+        <h2>How it works</h2>
+        <ol>
+          <li>Choose your workout app (Hevy, Strong, or Lyfta)</li>
+          <li>Import your data via API or CSV file</li>
+          <li>Explore your analytics — every feature is free</li>
+        </ol>
+
+        <h2>Reference pages</h2>
+        <ul>
+          <li><a href="%BASE_URL%about/">About FitVerse</a></li>
+          <li><a href="%BASE_URL%how-it-works/">How it works</a></li>
+          <li><a href="%BASE_URL%privacy/">Privacy model</a></li>
+          <li><a href="%BASE_URL%supported-apps/">Supported apps</a></li>
+          <li><a href="%BASE_URL%metrics/">Metrics glossary</a></li>
+          <li><a href="%BASE_URL%faq/">FAQ</a></li>
+          <li><a href="%BASE_URL%ai/">AI reference</a></li>
+          <li><a href="%BASE_URL%llms.txt">llms.txt</a></li>
+        </ul>
+
+        <p>Please enable JavaScript to use FitVerse.</p>
+      </div>
+    </noscript>
+
+    <div id="root" class="h-full w-full"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>

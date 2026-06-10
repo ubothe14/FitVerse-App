@@ -1,0 +1,71 @@
+import React from 'react';
+import { Dumbbell, Trophy, BarChart3 } from 'lucide-react';
+
+import type { RecentPR } from '../../utils/analysis/insights';
+import type { ExerciseAsset } from '../../utils/data/exerciseAssets';
+import type { WeightUnit } from '../../utils/storage/localStorage';
+import { convertWeight } from '../../utils/format/units';
+import { formatHumanReadableDate } from '../../utils/date/dateUtils';
+import { ExerciseThumbnail } from '../common/ExerciseThumbnail';
+import { SEMI_FANCY_FONT } from '../../utils/ui/uiConstants';
+
+// Recent PR Card with image and improvement
+interface RecentPRCardProps {
+  pr: RecentPR;
+  isLatest?: boolean;
+  asset?: ExerciseAsset;
+  weightUnit?: WeightUnit;
+  now?: Date;
+  onExerciseClick?: (exerciseName: string) => void;
+}
+
+export const RecentPRCard: React.FC<RecentPRCardProps> = ({
+  pr,
+  isLatest,
+  asset,
+  weightUnit = 'kg',
+  now,
+  onExerciseClick,
+}) => {
+  const { exercise, weight, date, isSilver, type } = pr;
+  const clickable = typeof onExerciseClick === 'function';
+
+  const isToday = now ? date.toDateString() === now.toDateString() : false;
+
+  const PrIcon = type === 'weight' ? Dumbbell : type === 'oneRm' ? Trophy : BarChart3;
+  const iconColor = isSilver ? 'text-slate-300' : 'text-yellow-400';
+
+  const cardClass = isSilver 
+    ? (isLatest ? 'bg-slate-500/15 border border-slate-500/40' : 'bg-black/20')
+    : (isLatest ? 'bg-emerald-500/5 border border-emerald-500/20' : 'bg-black/20');
+    
+  const improvementClass = isSilver ? 'text-slate-300' : 'text-yellow-400';
+
+  return (
+    <button
+      type="button"
+      onClick={() => onExerciseClick?.(exercise)}
+      disabled={!clickable}
+      className={`w-full flex items-center gap-3 p-2 rounded-lg text-left ${cardClass} ${clickable ? 'cursor-pointer border border-transparent hover:border-slate-600/40 transition-all' : 'cursor-default'}`}
+    >
+      <div className="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 rounded-md overflow-hidden">
+        <ExerciseThumbnail
+          asset={asset}
+          className="w-full h-full"
+          imageClassName="w-full h-full object-cover bg-white"
+        />
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="text-sm font-medium text-slate-200 truncate" style={SEMI_FANCY_FONT}>{exercise}</div>
+        <div className={`text-[10px] ${isToday ? 'text-yellow-400 font-bold' : 'text-slate-500'}`}>{formatHumanReadableDate(date, { now })}</div>
+      </div>
+      <div className="text-right">
+        <div className="text-sm font-bold text-slate-200">{convertWeight(weight, weightUnit)}{weightUnit}</div>
+        <div className={`text-[10px] font-bold ${improvementClass} flex items-center justify-end gap-1`}>
+          <PrIcon className={`w-3 h-3 ${iconColor}`} />
+          {type === 'oneRm' ? '1RM' : type === 'volume' ? 'Volume' : 'Weight'} PR{isSilver ? ' (2mo)' : ''}
+        </div>
+      </div>
+    </button>
+  );
+};

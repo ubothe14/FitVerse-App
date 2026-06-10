@@ -1,0 +1,25 @@
+export { Page };
+
+import React, { useEffect } from 'react';
+import { HashRouter } from 'react-router';
+import App from '../../App';
+import { initGA } from '../../utils/integrations/ga';
+
+const getRouterBasename = (): string => {
+  const baseUrl = import.meta.env.BASE_URL;
+  if (typeof baseUrl !== 'string') return '/';
+  const trimmed = baseUrl.replace(/\/+$/g, '');
+  return trimmed || '/';
+};
+
+function Page() {
+  useEffect(() => {
+    initGA();
+  }, []);
+
+  return (
+    <HashRouter basename={getRouterBasename()}>
+      <App />
+    </HashRouter>
+  );
+}

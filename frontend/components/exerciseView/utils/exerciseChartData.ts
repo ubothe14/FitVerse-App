@@ -1,0 +1,326 @@
+import { ExerciseStats, PrType } from '../../../types';
+import {
+  formatDayContraction,
+  getDateKey,
+  getRollingWindowStartForMode,
+  DEFAULT_CHART_MAX_POINTS,
+  pickChartAggregation,
+  uniformDownsample,
+  TimePeriod,
+} from '../../../utils/date/dateUtils';
+import { ExerciseSessionEntry } from '../../../utils/analysis/exerciseTrend';
+import { convertWeight } from '../../../utils/format/units';
+import { TimeFilterMode, WeightUnit } from '../../../utils/storage/localStorage';
+import { getLoadProgressionDirection } from '../../../utils/exercise/loadProgression';
+
+export interface ExerciseChartDataPoint {
+  timestamp: number;
+  date: string;
+  weight?: number;
+  oneRepMax?: number;
+  reps?: number;
+  sets?: number;
+  volume?: number;
+  isPr?: boolean;
+  prTypes?: PrType[];
+  isSilverPr?: boolean;
+  silverPrTypes?: PrType[];
+  // For unilateral exercises - separate L/R values
+  leftOneRepMax?: number;
+  leftWeight?: number;
+  leftReps?: number;
+  rightOneRepMax?: number;
+  rightWeight?: number;
+  rightReps?: number;
+}
+
+export const buildExerciseChartData = (args: {
+  selectedStats?: ExerciseStats;
+  selectedSessions: ExerciseSessionEntry[];
+  viewMode: TimeFilterMode;
+  allAggregationMode: 'daily' | 'weekly' | 'monthly';
+  weightUnit: WeightUnit;
+  effectiveNow: Date;
+  isBodyweightLike: boolean;
+}): ExerciseChartDataPoint[] => {
+  const {
+    selectedStats,
+    selectedSessions,
+    viewMode,
+    allAggregationMode,
+    weightUnit,
+    effectiveNow,
+    isBodyweightLike,
+  } = args;
+
+  if (!selectedStats || selectedSessions.length === 0) return [];
+  const isLowerWeightBetter = getLoadProgressionDirection(selectedStats.name) === 'lower';
+
+  const isBetterLoadValue = (candidate: number, currentBest: number): boolean => {
+    if (!Number.isFinite(candidate) || candidate <= 0) return false;
+    if (!Number.isFinite(currentBest) || currentBest <= 0) return true;
+    return isLowerWeightBetter ? candidate < currentBest : candidate > currentBest;
+  };
+
+  const pickBetterLoadValue = (a: number, b: number): number => {
+    return isBetterLoadValue(a, b) ? a : b;
+  };
+
+  // Check if this exercise has unilateral data
+  const hasUnilateralData = selectedStats.hasUnilateralData ?? false;
+  const hasLeftData = selectedSessions.some((s) => s.side === 'left');
+  const hasRightData = selectedSessions.some((s) => s.side === 'right');
+  const showSeparateSides = hasUnilateralData && (hasLeftData || hasRightData);
+
+  const history = [...selectedSessions].sort((a, b) => a.date.getTime() - b.date.getTime());
+
+  const windowStart = getRollingWindowStartForMode(viewMode, effectiveNow);
+  const source = windowStart ? history.filter((h) => h.date >= windowStart) : history;
+
+  let minTs = Number.POSITIVE_INFINITY;
+  let maxTs = Number.NEGATIVE_INFINITY;
+  for (const h of source) {
+    const ts = h.date.getTime();
+    if (!Number.isFinite(ts)) continue;
+    if (ts < minTs) minTs = ts;
+    if (ts > maxTs) maxTs = ts;
+  }
+
+  const preferred: 'daily' | 'weekly' | 'monthly' =
+    viewMode === 'all' ? allAggregationMode : viewMode === 'yearly' ? allAggregationMode : 'daily';
+
+  const agg: 'daily' | 'weekly' | 'monthly' =
+    Number.isFinite(minTs) && Number.isFinite(maxTs) && maxTs > minTs
+      ? pickChartAggregation({ minTs, maxTs, preferred, maxPoints: DEFAULT_CHART_MAX_POINTS })
+      : preferred;
+
+  const buildBucketedSeries = (period: TimePeriod): ExerciseChartDataPoint[] => {
+    if (showSeparateSides) {
+    // For unilateral, track L/R separately in buckets
+    const buckets = new Map<
+      string,
+      {
+        ts: number;
+        label: string;
+        leftOneRmMax: number;
+        leftWeightMax: number;
+        leftRepsMax: number;
+        rightOneRmMax: number;
+        rightWeightMax: number;
+        rightRepsMax: number;
+        oneRmMax: number;
+        weightMax: number;
+        repsMax: number;
+        sets: number;
+        prTypes: Set<PrType>;
+        silverPrTypes: Set<PrType>;
+      }
+    >();
+
+    source.forEach((h) => {
+      const { key, timestamp, label } = getDateKey(h.date, period);
+      let b = buckets.get(key);
+      if (!b) {
+        b = {
+          ts: timestamp,
+          label,
+          leftOneRmMax: 0,
+          leftWeightMax: 0,
+          leftRepsMax: 0,
+          rightOneRmMax: 0,
+          rightWeightMax: 0,
+          rightRepsMax: 0,
+          oneRmMax: 0,
+          weightMax: 0,
+          repsMax: 0,
+          sets: 0,
+          prTypes: new Set(),
+          silverPrTypes: new Set(),
+        };
+        buckets.set(key, b);
+      }
+
+      if (h.side === 'left') {
+        b.leftOneRmMax = pickBetterLoadValue(h.oneRepMax, b.leftOneRmMax);
+        b.leftWeightMax = pickBetterLoadValue(h.weight, b.leftWeightMax);
+        if (h.maxReps > b.leftRepsMax) b.leftRepsMax = h.maxReps;
+      } else if (h.side === 'right') {
+        b.rightOneRmMax = pickBetterLoadValue(h.oneRepMax, b.rightOneRmMax);
+        b.rightWeightMax = pickBetterLoadValue(h.weight, b.rightWeightMax);
+        if (h.maxReps > b.rightRepsMax) b.rightRepsMax = h.maxReps;
+      } else {
+        b.oneRmMax = pickBetterLoadValue(h.oneRepMax, b.oneRmMax);
+        b.weightMax = pickBetterLoadValue(h.weight, b.weightMax);
+        if (h.maxReps > b.repsMax) b.repsMax = h.maxReps;
+      }
+      b.sets += h.sets;
+
+      // Aggregate PR types
+      if (h.prTypes) {
+        h.prTypes.forEach((type) => b!.prTypes.add(type));
+      }
+      // Aggregate Silver PR types
+      if (h.silverPrTypes) {
+        h.silverPrTypes.forEach((type) => b!.silverPrTypes.add(type));
+      }
+    });
+
+    return Array.from(buckets.values())
+      .sort((a, b) => a.ts - b.ts)
+      .map((b) => {
+        const prTypes = Array.from(b.prTypes);
+        const silverPrTypes = Array.from(b.silverPrTypes);
+        const isPr = prTypes.length > 0;
+        const isSilverPr = !isPr && silverPrTypes.length > 0; // Only silver if no gold
+
+        const point: ExerciseChartDataPoint = {
+          timestamp: b.ts,
+          date: b.label,
+          sets: b.sets,
+          isPr,
+          prTypes,
+          isSilverPr,
+          silverPrTypes,
+        };
+
+          if (b.leftOneRmMax > 0) {
+            point.leftOneRepMax = convertWeight(Number(b.leftOneRmMax.toFixed(1)), weightUnit);
+            point.leftWeight = convertWeight(Number(b.leftWeightMax.toFixed(1)), weightUnit);
+            point.leftReps = b.leftRepsMax;
+          }
+          if (b.rightOneRmMax > 0) {
+            point.rightOneRepMax = convertWeight(Number(b.rightOneRmMax.toFixed(1)), weightUnit);
+            point.rightWeight = convertWeight(Number(b.rightWeightMax.toFixed(1)), weightUnit);
+            point.rightReps = b.rightRepsMax;
+          }
+          if (b.oneRmMax > 0) {
+            point.oneRepMax = convertWeight(Number(b.oneRmMax.toFixed(1)), weightUnit);
+            point.weight = convertWeight(Number(b.weightMax.toFixed(1)), weightUnit);
+            point.reps = b.repsMax;
+          }
+
+          return point;
+        });
+    }
+
+    // Standard bilateral bucketing
+    const buckets = new Map<
+      string,
+      {
+        ts: number;
+        label: string;
+        oneRmMax: number;
+        weightMax: number;
+        repsMax: number;
+        sets: number;
+        // Track which PR types correspond to the max values
+        weightPrTypes: Set<PrType>;
+        oneRmPrTypes: Set<PrType>;
+        // Track Silver PR types separately
+        silverWeightPrTypes: Set<PrType>;
+        silverOneRmPrTypes: Set<PrType>;
+      }
+    >();
+
+    source.forEach((h) => {
+      const { key, timestamp, label } = getDateKey(h.date, period);
+      let b = buckets.get(key);
+      if (!b) {
+        b = { 
+          ts: timestamp, 
+          label, 
+          oneRmMax: 0, 
+          weightMax: 0, 
+          repsMax: 0, 
+          sets: 0, 
+          weightPrTypes: new Set(),
+          oneRmPrTypes: new Set(),
+          silverWeightPrTypes: new Set(),
+          silverOneRmPrTypes: new Set(),
+        };
+        buckets.set(key, b);
+      }
+      
+      // Check BEFORE updating max values
+      const isNewWeightMax = isBetterLoadValue(h.weight, b.weightMax);
+      const isNewOneRmMax = isBetterLoadValue(h.oneRepMax, b.oneRmMax);
+      
+      // Update max values
+      b.oneRmMax = pickBetterLoadValue(h.oneRepMax, b.oneRmMax);
+      b.weightMax = pickBetterLoadValue(h.weight, b.weightMax);
+      b.repsMax = Math.max(b.repsMax, h.maxReps);
+      b.sets += h.sets;
+
+      // Only add PR types if they correspond to the max value in this bucket
+      if (h.prTypes) {
+        // Weight PR: only if this session achieved the new max weight
+        if (isNewWeightMax) {
+          h.prTypes.forEach((type) => {
+            if (type === 'weight' || type === 'volume') {
+              b!.weightPrTypes.add(type);
+            }
+          });
+        }
+        
+        // 1RM PR: only if this session achieved the new max 1RM
+        if (isNewOneRmMax && h.prTypes.includes('oneRm')) {
+          b!.oneRmPrTypes.add('oneRm');
+        }
+      }
+      
+      // Track Silver PRs separately (only if no gold PR of same type)
+      if (h.silverPrTypes) {
+        if (isNewWeightMax) {
+          h.silverPrTypes.forEach((type) => {
+            if (type === 'weight' || type === 'volume') {
+              b!.silverWeightPrTypes.add(type);
+            }
+          });
+        }
+        if (isNewOneRmMax && h.silverPrTypes.includes('oneRm')) {
+          b!.silverOneRmPrTypes.add('oneRm');
+        }
+      }
+    });
+
+    return Array.from(buckets.values())
+      .sort((a, b) => a.ts - b.ts)
+      .map((b) => {
+        // Combine PR types from both weight and 1RM
+        const allPrTypes = new Set([...b.weightPrTypes, ...b.oneRmPrTypes]);
+        const prTypes = Array.from(allPrTypes);
+        const isPr = prTypes.length > 0;
+        
+        // Silver PRs only count if there's no gold PR
+        const allSilverPrTypes = new Set([...b.silverWeightPrTypes, ...b.silverOneRmPrTypes]);
+        const silverPrTypes = isPr ? [] : Array.from(allSilverPrTypes);
+        const isSilverPr = !isPr && silverPrTypes.length > 0;
+
+        return {
+          timestamp: b.ts,
+          date: b.label,
+          oneRepMax: convertWeight(Number(b.oneRmMax.toFixed(1)), weightUnit),
+          weight: convertWeight(Number(b.weightMax.toFixed(1)), weightUnit),
+          reps: b.repsMax,
+          sets: b.sets,
+          isPr,
+          prTypes,
+          isSilverPr,
+          silverPrTypes,
+          // Also store separately for accurate filtering
+          weightPrTypes: Array.from(b.weightPrTypes),
+          oneRmPrTypes: Array.from(b.oneRmPrTypes),
+        };
+      });
+  };
+
+  const raw = viewMode === 'yearly'
+    ? buildBucketedSeries(agg === 'monthly' ? 'monthly' : 'weekly')
+    : viewMode === 'weekly' || viewMode === 'monthly'
+      ? buildBucketedSeries(agg === 'monthly' ? 'monthly' : agg === 'weekly' ? 'weekly' : 'daily')
+      : viewMode === 'all'
+        ? buildBucketedSeries(agg === 'monthly' ? 'monthly' : agg === 'weekly' ? 'weekly' : 'daily')
+        : [];
+
+  return uniformDownsample(raw, DEFAULT_CHART_MAX_POINTS);
+};

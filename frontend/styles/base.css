@@ -1,0 +1,263 @@
+/* Hide scrollbar for carousel */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+button:not(:disabled),
+a[href],
+[role="button"]:not([aria-disabled="true"]),
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  cursor: pointer;
+}
+
+.activity-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(20, 184, 166, 0.2), transparent 30rem),
+    radial-gradient(circle at 82% 18%, rgba(244, 63, 94, 0.16), transparent 32rem),
+    linear-gradient(135deg, #05070d 0%, #071118 42%, #0e1311 100%);
+}
+
+.activity-bg--light {
+  background:
+    radial-gradient(circle at 14% 8%, rgba(13, 148, 136, 0.17), transparent 29rem),
+    radial-gradient(circle at 84% 18%, rgba(225, 29, 72, 0.12), transparent 32rem),
+    linear-gradient(135deg, #f8fafc 0%, #eef7f4 46%, #f9f4ef 100%);
+}
+
+.activity-bg--landing {
+  opacity: 1;
+}
+
+.activity-bg--app {
+  opacity: 0.86;
+}
+
+.activity-bg__mesh,
+.activity-bg__grid,
+.activity-bg__wave {
+  position: absolute;
+  inset: 0;
+}
+
+.activity-bg__mesh {
+  background:
+    linear-gradient(115deg, transparent 0 18%, rgba(16, 185, 129, 0.09) 18% 19%, transparent 19% 100%),
+    linear-gradient(58deg, transparent 0 50%, rgba(14, 165, 233, 0.07) 50% 51%, transparent 51% 100%),
+    radial-gradient(circle at 52% 38%, rgba(255, 255, 255, 0.08), transparent 18rem);
+  filter: blur(0.2px);
+}
+
+.activity-bg__grid {
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.09) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.75), transparent 82%);
+  transform: perspective(900px) rotateX(62deg) translateY(-26%);
+  transform-origin: top;
+}
+
+.activity-bg--light .activity-bg__grid {
+  background-image:
+    linear-gradient(rgba(15, 23, 42, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.08) 1px, transparent 1px);
+}
+
+.activity-bg__pulse {
+  position: absolute;
+  width: 22rem;
+  height: 22rem;
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  border-radius: 999px;
+  animation: activity-pulse 8s ease-in-out infinite;
+}
+
+.activity-bg__pulse--one {
+  top: 14%;
+  left: 7%;
+}
+
+.activity-bg__pulse--two {
+  right: 9%;
+  top: 30%;
+  width: 18rem;
+  height: 18rem;
+  border-color: rgba(251, 113, 133, 0.28);
+  animation-delay: -2.4s;
+}
+
+.activity-bg__pulse--three {
+  left: 52%;
+  bottom: 8%;
+  width: 28rem;
+  height: 28rem;
+  border-color: rgba(125, 211, 252, 0.2);
+  animation-delay: -5s;
+}
+
+.activity-bg__ticker {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 9rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0.75rem;
+  color: rgba(226, 232, 240, 0.9);
+  background: rgba(2, 6, 23, 0.34);
+  box-shadow: 0 18px 60px rgba(2, 6, 23, 0.18);
+  backdrop-filter: blur(18px);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  animation: activity-float 10s ease-in-out infinite;
+}
+
+.activity-bg__ticker span:last-child {
+  margin-left: auto;
+  color: rgb(110, 231, 183);
+}
+
+.activity-bg--light .activity-bg__ticker {
+  color: rgba(15, 23, 42, 0.75);
+  background: rgba(255, 255, 255, 0.46);
+  border-color: rgba(15, 23, 42, 0.1);
+}
+
+.activity-bg--light .activity-bg__ticker span:last-child {
+  color: rgb(4, 120, 87);
+}
+
+.activity-bg__ticker--one {
+  left: 8%;
+  top: 28%;
+}
+
+.activity-bg__ticker--two {
+  right: 9%;
+  top: 20%;
+  animation-delay: -3s;
+}
+
+.activity-bg__ticker--three {
+  left: 14%;
+  bottom: 22%;
+  animation-delay: -6s;
+}
+
+.activity-bg__ticker--four {
+  right: 16%;
+  bottom: 18%;
+  animation-delay: -1.8s;
+}
+
+.activity-bg--app .activity-bg__ticker {
+  opacity: 0.32;
+}
+
+.activity-bg--landing .activity-bg__ticker {
+  opacity: 0.12;
+}
+
+.activity-bg__wave {
+  top: auto;
+  height: 50vh;
+  bottom: 3%;
+  opacity: 0.38;
+  animation: activity-wave-drift 12s ease-in-out infinite;
+}
+
+.activity-bg__wave path {
+  fill: none;
+  stroke-width: 2;
+  stroke: rgba(52, 211, 153, 0.42);
+  stroke-linecap: round;
+  stroke-dasharray: 18 20;
+  animation: activity-dash 9s linear infinite;
+}
+
+.activity-bg__wave path + path {
+  stroke: rgba(251, 113, 133, 0.26);
+  animation-duration: 12s;
+}
+
+.activity-shell {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+}
+
+.activity-bg__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(2, 6, 23, 0.16), rgba(2, 6, 23, 0.68));
+}
+
+html[data-theme='light'] .activity-bg__overlay {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.26), rgba(248, 250, 252, 0.74));
+}
+
+@keyframes activity-pulse {
+  0%, 100% {
+    opacity: 0.14;
+    transform: scale(0.82);
+  }
+  50% {
+    opacity: 0.42;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes activity-float {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -18px, 0);
+  }
+}
+
+@keyframes activity-wave-drift {
+  0%, 100% {
+    transform: translateX(-2%);
+  }
+  50% {
+    transform: translateX(2%);
+  }
+}
+
+@keyframes activity-dash {
+  to {
+    stroke-dashoffset: -240;
+  }
+}
+
+@media (max-width: 760px) {
+  .activity-bg__ticker {
+    display: none;
+  }
+
+  .activity-bg__pulse {
+    width: 16rem;
+    height: 16rem;
+  }
+
+  .activity-bg__grid {
+    background-size: 48px 48px;
+  }
+}

@@ -1,0 +1,123 @@
+import type { WorkoutSetDTO } from './types';
+import type { LyfatGetWorkoutsResponse, LyfatGetWorkoutSummaryResponse } from './lyfta';
+
+const parseDate = (dateStr: string | undefined): string => {
+  if (!dateStr) return '';
+  try {
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return '';
+    return date.toISOString();
+  } catch {
+    return '';
+  }
+};
+
+const parseDurationToMinutes = (durationStr: string | undefined): number => {
+  if (!durationStr) return 0;
+  try {
+    const parts = durationStr.split(':');
+    if (parts.length !== 3) return 0;
+    
+    const hours = parseInt(parts[0], 10);
+    const minutes = parseInt(parts[1], 10);
+    const seconds = parseInt(parts[2], 10);
+    
+    if (isNaN(hours) || isNaN(minutes) || isNaN(seconds)) return 0;
+    
+    return hours * 60 + minutes + Math.round(seconds / 60);
+  } catch {
+    return 0;
+  }
+};
+
+const toNumber = (v: unknown, fallback = 0): number => {
+  if (typeof v === 'number' && Number.isFinite(v)) return v;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : fallback;
+};
+
+const LYFTA_SET_TYPE_MAP: Record<string, string> = {
+  '0': 'normal',
+  '1': 'warmup',
+  '2': 'right',
+  '3': 'left',
+  '4': 'failure',
+  '5': 'dropset',
+  '6': 'negative',
+  '7': 'partial',
+  '8': 'myoreps',
+  '9': 'feederset',
+  '10': 'topset',
+  '11': 'backoff',
+};
+
+const normalizeSetType = (value: unknown): string => {
+  const s = String(value ?? '');
+  return LYFTA_SET_TYPE_MAP[s] || 'normal';
+};
+
+export const mapLyfataWorkoutsToWorkoutSets = (
+  workouts: LyfatGetWorkoutsResponse['workouts'],
+  summaries: LyfatGetWorkoutSummaryResponse['workouts'] = [],
+  weightUnit: 'kg' | 'lbs' = 'kg',
+): WorkoutSetDTO[] => {
+  const out: WorkoutSetDTO[] = [];
+
+  // Create a map of workout ID to duration for quick lookup
+  const durationMap = new Map<number, number>();
+  for (const summary of summaries) {
+    const workoutId = parseInt(summary.id, 10);
+    if (isNaN(workoutId)) continue;
+    const duration = parseDurationToMinutes(summary.workout_duration);
+    durationMap.set(workoutId, duration);
+  }
+
+  for (const w of workouts) {
+    const title = String(w.title ?? 'Workout');
+    const start_time = parseDate(w.workout_perform_date);
+
+    // Calculate end_time based on duration from summary data
+    const durationMinutes = durationMap.get(w.id) ?? 0;
+    let end_time = start_time;
+
+    if (durationMinutes > 0 && w.workout_perform_date) {
+      const startDate = new Date(w.workout_perform_date);
+      if (!isNaN(startDate.getTime())) {
+        end_time = new Date(startDate.getTime() + durationMinutes * 60 * 1000).toISOString();
+      }
+    }
+
+    const description = '';
+
+    for (const [exerciseIndex, ex] of (w.exercises ?? []).entries()) {
+      const exercise_title = String(ex.excercise_name ?? '').trim();
+      const exercise_notes = '';
+      const superset_id = '';
+      const setsForExercise = [...(ex.sets ?? [])].reverse();
+      setsForExercise.forEach((s, setIdx) => {
+        const weight = toNumber(s.weight, 0);
+
+        out.push({
+          title,
+          start_time,
+          end_time,
+          description,
+          exercise_title,
+          exercise_index: exerciseIndex,
+          superset_id,
+          exercise_notes,
+          set_index: (ex.sets?.length ?? 1) - 1 - setIdx,
+          set_type: normalizeSetType(s.set_type_id),
+          weight_kg: weight,
+          weight_unit: weightUnit,
+          reps: toNumber(s.reps, 0),
+          distance_km: toNumber(s.distance, 0),
+          duration_seconds: toNumber(s.duration, ex.exercise_rest_time ?? 0),
+          rpe: s.rir ? toNumber(s.rir, 0) > 0 ? 10 - toNumber(s.rir, 0) : null : null,
+        });
+      });
+    }
+  }
+
+  return out;
+};

@@ -1,0 +1,41 @@
+{
+  "name": "hevy-analytics-backend",
+  "version": "1.0.0",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "main": "dist/index.js",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "tsc -w --preserveWatchOutput -p tsconfig.json",
+    "dev:serve": "node --watch --watch-preserve-output --env-file=.env dist/index.js",
+    "dev:all": "npm run build && concurrently -n tsc,serve -c yellow,blue \"npm run dev\" \"npm run dev:serve\"",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "postinstall": "node scripts/ensure-puppeteer-browser.mjs",
+    "puppeteer:install": "node scripts/ensure-puppeteer-browser.mjs"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "date-fns": "^4.1.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.4.1",
+    "http-proxy-middleware": "^3.0.5",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.7.0",
+    "posthog-node": "^5.33.0",
+    "puppeteer": "^24.42.0"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^25.6.0",
+    "concurrently": "^10.0.0",
+    "typescript": "~6.0.3"
+  }
+}
