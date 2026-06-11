@@ -27,6 +27,21 @@ export const clearCacheAndRestart = (): void => {
   window.location.reload();
 };
 
+export const clearCacheAndRestartPreservingLandingAuth = (): void => {
+  trackEvent('unload_data', {});
+  resetUser();
+  clearCSVData();
+  clearHevyAuthToken();
+  clearDataSourceChoice();
+  clearLastCsvPlatform();
+  clearLastLoginMethod();
+  clearCombinedDataSources();
+  clearSetupComplete();
+  computationCache.clear();
+  browserCache.clearAllCache();
+  window.location.reload();
+};
+
 export const forceRefreshAndRelogin = (): void => {
   trackEvent('force_refresh', {});
   resetUser();

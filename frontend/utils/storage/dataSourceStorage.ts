@@ -171,6 +171,16 @@ export const clearCombinedDataSources = (): void => {
   }
 };
 
+export const removeCombinedDataSource = (source: DataSourceChoice): void => {
+  try {
+    const current = readCombinedSources();
+    const next = current.filter((s) => s !== source);
+    writeCombinedSources(next);
+  } catch {
+    // Silent fail
+  }
+};
+
 // Setup Complete
 const setupCompleteStorage = createStorageManager<boolean>({
   key: 'hevy_analytics_setup_complete',

@@ -10,7 +10,7 @@ import { ToastProvider, useToast } from './components/ui/ToastProvider';
 import type { OnboardingFlow } from './app/onboarding/types';
 import { getEffectiveNowFromWorkoutData } from './utils/date/dateUtils';
 import { getDataSourceChoice, getSetupComplete } from './utils/storage/dataSourceStorage';
-import { clearCacheAndRestart as clearCacheAndRestartNow, forceRefreshAndRelogin as forceRefreshNow } from './app/state';
+import { clearCacheAndRestart as clearCacheAndRestartNow, clearCacheAndRestartPreservingLandingAuth as clearCacheAndRestartPreservingLandingAuthNow, forceRefreshAndRelogin as forceRefreshNow } from './app/state';
 import { usePrefetchHeavyViews } from './app/navigation';
 import { useStartupAutoLoad } from './app/startup';
 import { usePlatformDeepLink } from './app/navigation';
@@ -28,6 +28,9 @@ import { calculatePRInsights } from './utils/analysis/insights';
 import { createFingerprintMatcher } from './utils/exercise/exerciseFingerprint';
 import { resolveDarkBgByMode, resolveLightBg } from './src/assets/images/misc/bgConfig';
 import { getUserProfile, getJwtToken, type UserProfile } from './utils/storage/localStorage';
+import { clearHevyAuthToken, removeCombinedDataSource } from './utils/storage/dataSourceStorage';
+import { clearHevyProApiKey, clearHevyCredentials } from './utils/storage/hevyCredentialsStorage';
+import { trackEvent } from './utils/integrations/analytics';
 import { fetchUserProfile } from './utils/api/aiBackend';
 import { AuthPage } from './components/auth/AuthPage';
 
@@ -475,6 +478,52 @@ const App: React.FC = () => {
     clearCacheAndRestartNow();
   }, []);
 
+  const clearCacheAndRestartPreservingLandingAuth = useCallback(() => {
+    // fall back to the app-state helper when used outside of the app context
+    clearCacheAndRestartPreservingLandingAuthNow();
+  }, []);
+
+  const unloadHevyButKeepLandingAuth = useCallback(() => {
+    // Clear only Hevy-related client state, preserve landing JWT/profile
+    try {
+      trackEvent('unload_hevy', {});
+    } catch {
+      // ignore
+    }
+
+    // Clear stored Hevy credentials and tokens
+    clearHevyAuthToken();
+    clearHevyProApiKey();
+    clearHevyCredentials();
+    removeCombinedDataSource('hevy');
+
+    // Remove Hevy data from in-memory state (safe functional updates)
+    setDataBySource((prev) => {
+      const next = { ...(prev || {}) } as any;
+      delete next.hevy;
+      return next;
+    });
+
+    setParsedData((prev) => {
+      const next = (prev ?? []).filter((s) => s.source !== 'hevy');
+      // Update hydrated flag based on remaining data
+      setHasHydratedData(next.length > 0);
+      return next;
+    });
+
+    setDataSource(null);
+
+    // Open landing/platform selection without clearing landing auth
+    setOnboarding({ intent: 'initial', step: 'platform' });
+
+    // Notify user in-app
+    try {
+      addToastRef.current?.('Hevy disconnected — landing account remains signed in', 3000);
+    } catch {
+      // ignore
+    }
+  }, [setDataBySource, setParsedData, parsedData, setHasHydratedData, setDataSource, setOnboarding]);
+
   const forceRefreshAndRelogin = useCallback(() => {
     forceRefreshNow();
   }, []);
@@ -737,7 +786,7 @@ const App: React.FC = () => {
         onSetCsvImportError={clearCsvImportError}
         onSetHevyLoginError={clearHevyLoginError}
         onSetLyfatLoginError={clearLyfatLoginError}
-        onClearCacheAndRestart={clearCacheAndRestart}
+        onClearCacheAndRestart={unloadHevyButKeepLandingAuth}
         onForceRefreshAndRelogin={forceRefreshAndRelogin}
         onProcessFile={processFile}
         onHevyLogin={handleHevyLogin}
