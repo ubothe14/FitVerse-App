@@ -1,4 +1,10 @@
 import 'dotenv/config';
+import path from 'path';
+
+// Dynamically set PUPPETEER_CACHE_DIR relative to this file's location (dist/index.js)
+// so Puppeteer can reliably find the Chrome binary in '.puppeteer-cache' on local and Render environments.
+process.env.PUPPETEER_CACHE_DIR = path.resolve(__dirname, '..', '.puppeteer-cache');
+
 import express from 'express';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
