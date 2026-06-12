@@ -16,6 +16,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthComplete, onClose }) =
   const [step, setStep] = useState<AuthStep>('login');
   const [isRegister, setIsRegister] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [authProvider, setAuthProvider] = useState<'email' | 'google'>('email');
 
   // Authentication Fields
   const [name, setName] = useState('');
@@ -98,6 +99,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthComplete, onClose }) =
       } else {
         setName(res.name || '');
         setEmail(res.email || '');
+        setAuthProvider('google');
         setStep('profile');
       }
     } catch (err: any) {
@@ -156,6 +158,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthComplete, onClose }) =
     setLoading(true);
     try {
       if (isRegister) {
+        setAuthProvider('email');
         setStep('profile');
       } else {
         // Authenticate with email and password
@@ -200,7 +203,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthComplete, onClose }) =
         height: Number(height),
         gender,
         activityLevel,
-        authProvider: email ? 'email' : 'google',
+        authProvider,
       } as any;
 
       const macroTargets: MacroTargets = {
@@ -399,7 +402,10 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthComplete, onClose }) =
             <div className="text-center pt-2">
               <button
                 type="button"
-                onClick={() => setIsRegister(!isRegister)}
+                onClick={() => {
+                  setIsRegister(!isRegister);
+                  setAuthProvider('email');
+                }}
                 className="text-xs text-slate-400 hover:text-white underline transition"
               >
                 {isRegister ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
@@ -601,7 +607,10 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthComplete, onClose }) =
             <div className="flex gap-3 pt-2">
               <button
                 type="button"
-                onClick={() => setStep('login')}
+                onClick={() => {
+                  setStep('login');
+                  setAuthProvider('email');
+                }}
                 className="flex-1 h-11 px-4 rounded-xl border border-white/10 text-xs font-semibold hover:text-white hover:bg-white/5 cursor-pointer"
               >
                 Back to Sign In

@@ -75,6 +75,8 @@ app.use(
       if (allowedOrigins.includes(origin)) return cb(null, true);
       // Allow private LAN origins in both dev and prod for local development against hosted backend
       if (isPrivateLanOrigin(origin)) return cb(null, true);
+      // Allow Vercel preview/deployment domains so users/developers deploying to Vercel can connect
+      if (origin.endsWith('.vercel.app') || /^https?:\/\/fit-verse-.*\.vercel\.app$/.test(origin)) return cb(null, true);
       return cb(new Error('CORS blocked'), false);
     },
     methods: ['GET', 'POST', 'OPTIONS'],
