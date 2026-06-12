@@ -3,10 +3,8 @@ import { Navigation } from '../layout/Navigation';
 import { useTheme } from '../theme/ThemeProvider';
 import { assetPath } from '../../constants';
 import { clientOnly } from 'vike-react/clientOnly';
-import lightBgImage from '../../src/assets/images/misc/light-bg1.avif';
-import darkBgImage from '../../src/assets/images/misc/dark-bg5.avif';
+import { ActivityBackground } from '../layout/ActivityBackground';
 
-const LightRays = clientOnly(() => import('../landing/lightRays/LightRays'));
 const PlatformDock = clientOnly(() => import('../landing/ui/PlatformDock'));
 
 type InfoShellProps = {
@@ -72,46 +70,8 @@ export const InfoShell: React.FC<InfoShellProps> = ({ activeNav = null, title, s
   ];
 
   return (
-    <div className={`min-h-screen font-sans ${isLight ? 'text-slate-900' : 'text-white'}`}>
-      {/* Background image for light mode */}
-      {isLight && (
-        <img
-          src={lightBgImage}
-          alt=""
-          aria-hidden="true"
-          className="fixed inset-0 w-full h-full object-cover z-[-1] pointer-events-none"
-          loading="lazy"
-        />
-      )}
-      {/* Background image for dark mode */}
-      {!isLight && (
-        <img
-          src={darkBgImage}
-          alt=""
-          aria-hidden="true"
-          className="fixed inset-0 w-full h-full object-cover z-[-1] pointer-events-none opacity-10"
-          loading="lazy"
-        />
-      )}
-      {/* Light rays - dark mode only */}
-      {!isLight && (
-        <div className="fixed inset-0 z-[1] pointer-events-none">
-          <LightRays
-            fallback={null}
-            raysOrigin="top-center"
-            raysColor="#ef4444"
-            raysSpeed={0.75}
-            lightSpread={1.2}
-            rayLength={1.5}
-            followMouse={true}
-            mouseInfluence={0.06}
-            noiseAmount={0.05}
-            distortion={0.03}
-            fadeDistance={1.2}
-            saturation={0.9}
-          />
-        </div>
-      )}
+    <div className={`activity-shell min-h-screen font-sans overflow-x-hidden ${isLight ? 'text-slate-900' : 'text-slate-200'}`}>
+      <ActivityBackground variant="landing" />
 
       {/* Navigation */}
       <div className="relative z-10 mx-auto max-w-6xl w-full pt-2">
